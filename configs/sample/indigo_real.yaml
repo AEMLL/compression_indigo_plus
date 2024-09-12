@@ -1,0 +1,7 @@
+scale: 1.0
+weight: [1,0.5]
+INN_dir: "weights/INN/INN.pth"
+start_timesteps: 100
+
+finetune_lr: 5e-5
+finetune_end_step: 0
