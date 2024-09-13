@@ -10,8 +10,8 @@ This repository is the official PyTorch implementation of the paper [INDIGO+: A 
 <img src="figures/blindindigo.png" alt="blindindigo" width="800" />
 
 ## Experimental Results
-[<img src="figures/Aaron.png" height="320px"/>](https://imgsli.com/Mjk1Mzgy)
-[<img src="figures/Charlie.png" height="320px"/>](https://imgsli.com/Mjk2Mzc4)
+[<img src="figures/Aaron.png" height="320px"/>](https://imgsli.com/Mjk2NDE2)
+[<img src="figures/Charlie.png" height="320px"/>](https://imgsli.com/Mjk2NDEy)
 ![img.png](figures/figure_paper.png)
 
 ## Dependencies and Installation
