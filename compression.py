@@ -5,19 +5,19 @@ from torchvision.utils import save_image, make_grid
 
 
 def compress_images(in_path, out_path, qf):
-    train_dataset = datasets.ImageFolder(in_path)
-    loader_train = DataLoader(train_dataset, batch_size=32, shuffle=True)
-
-    # Looping through it, get a batch on each loop
-    # for images, labels in dataloader:
-    #     pass
-
-    # Get one batch
-    hq_images, labels = next(iter(loader_train))
-    lq_images = torch.empty(hq_images.shape)
-    for i in hq_images.size(dim=0):
-        lq_images[i] = util_image.jpeg_compress(hq_images[i],qf)
-        save_image(lq_images[i], out_path+'img'+str(i)+'.png')
+    dataset = BaseDataFolder(
+        dir_path=in_path,
+        transform_type='default',
+        transform_kwargs={'mean':0, 'std':1.0},
+        need_path=True,
+        im_exts=['png', 'jpg', 'jpeg', 'JPEG', 'bmp'],
+    )
+    dataloader = torch.utils.data.DataLoader(
+        dataset,
+        batch_size=bs,
+        shuffle=False,
+    )
+    print(f'Number of testing images: {len(dataset)}', flush=True)
 
 
 compress_images()
