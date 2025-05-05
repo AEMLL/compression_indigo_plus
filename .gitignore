@@ -3,7 +3,6 @@ results/
 weights/
 **/__pycache__
 scripts/
-data/
 **/.ipynb_checkpoints
 datasets/
 inn/experiments/
