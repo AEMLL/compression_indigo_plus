@@ -1,0 +1,97 @@
+# general settings
+name: inn_jpeg_qf80
+model_type: CINNModel
+scale: 4
+num_gpu: 1  # set num_gpu: 0 for cpu mode
+manual_seed: 0
+
+# dataset and data loader settings
+datasets:
+  train:
+    name: FFHQJPEGTrain
+    type: FFHQJPEGDataset
+    dataroot_gt: datasets/ffhq/train
+    io_backend:
+      type: disk
+
+    gt_size: 512
+    qf: 80
+    use_flip: true
+    use_rot: true
+
+    # data loader
+    use_shuffle: true
+    num_worker_per_gpu: 3
+    batch_size_per_gpu: 8
+    dataset_enlarge_ratio: 1
+    prefetch_mode: ~
+
+  val:
+    name: FFHQJPEGVal
+    type: FFHQJPEGDataset
+    dataroot_gt: datasets/ffhq/val
+    gt_size: 512
+    qf: 80
+    io_backend:
+      type: disk
+
+# network structures
+network_g:
+  type: RWNN # Use default parameters
+  offset: 0.5
+  LiftNet_iter: 2
+  basic_block_type: rb_cres_kdsr
+  net_kdsr: ~
+  kdsr: 1
+
+
+# path
+path:
+  pretrain_network_g: ~
+  strict_load_g: true
+  resume_state: ~
+
+# training settings
+train:
+  optim_g:
+    type: Adam
+    lr: !!float 2e-5
+    weight_decay: 0.001
+    betas: [0.9, 0.99]
+
+  scheduler:
+    type: MultiStepLR
+    milestones: [50000]
+    gamma: 0.5
+
+  total_iter: 5000
+  warmup_iter: -1  # no warm up
+
+  # losses
+  l2_opt:
+    type: MSELoss
+    loss_weight: 1.0
+    reduction: mean
+
+# validation settings
+val:
+  val_freq: !!float 5e3
+  save_img: true
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 4
+      test_y_channel: false
+    niqe:
+      type: calculate_niqe
+      crop_border: 4
+
+# logging settings
+logger:
+  print_freq: 100
+  save_checkpoint_freq: !!float 5e3
+  use_tb_logger: true
+  wandb:
+    project: ~
+    resume_id: ~

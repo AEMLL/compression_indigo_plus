@@ -1,4 +1,7 @@
 import os.path as osp
+import sys
+# TODO: change to environment variable
+sys.path.insert(0, "/rds/general/user/aem21/home/FYP/compression_indigo_plus")
 from basicsr.train import train_pipeline
 
 import archs  # noqa: F401

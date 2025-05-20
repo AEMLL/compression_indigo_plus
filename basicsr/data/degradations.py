@@ -728,7 +728,7 @@ def random_add_poisson_noise_pt(img, scale_range=(0, 1.0), gray_prob=0, clip=Tru
 # ------------------------------------------------------------------------ #
 
 
-def add_jpg_compression(img, quality=90):
+def add_jpg_compression(img, quality=90, size=False):
     """Add JPG compression artifacts.
 
     Args:
@@ -743,8 +743,12 @@ def add_jpg_compression(img, quality=90):
     img = np.clip(img, 0, 1)
     encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
     _, encimg = cv2.imencode('.jpg', img * 255., encode_param)
+    encsize = np.prod(encimg.shape) * encimg.itemsize
     img = np.float32(cv2.imdecode(encimg, 1)) / 255.
-    return img
+    if (size):
+        return img, encsize
+    else:
+        return img
 
 
 def random_add_jpg_compression(img, quality_range=(90, 100)):
