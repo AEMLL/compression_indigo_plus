@@ -1,6 +1,6 @@
-scale: 3.5
+scale: 0.5
 weight: [2.5,1]
-INN_dir: "weights/INN/INN_JPEG_QF80.pth"
+INN_dir: "weights/INN/large_percep/INN_JPEG_QF80.pth"
 start_timesteps: 100
 
 finetune_lr: 0

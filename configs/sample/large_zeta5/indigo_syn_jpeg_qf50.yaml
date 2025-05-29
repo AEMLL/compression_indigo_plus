@@ -1,0 +1,7 @@
+scale: 0.5
+weight: [2.5,1]
+INN_dir: "weights/INN/large/INN_JPEG_QF50.pth"
+start_timesteps: 100
+
+finetune_lr: 0
+finetune_end_step: 0

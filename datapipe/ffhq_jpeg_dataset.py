@@ -62,6 +62,7 @@ class FFHQJPEGDataset(data.Dataset):
         h_old,w_old = img_gt.shape[0:2] 
         if not (h_old == self.gt_size and w_old == self.gt_size):
             img_gt = cv2.resize(img_gt, (self.gt_size,) * 2, interpolation=cv2.INTER_CUBIC)
+            
 
         # Downsampling to match effect of forward INN (set scale to 1 to avoid)
         img_lq = cv2.resize(img_gt, (self.gt_size // self.scale,) *2, interpolation=cv2.INTER_CUBIC)
@@ -80,6 +81,7 @@ class FFHQJPEGDataset(data.Dataset):
         img_gt, img_lq = img2tensor([img_gt, img_lq], bgr2rgb=True, float32=True)
 
         # Limit image to range [0,1]
+        img_gt = torch.clamp((img_gt * 255.0).round(), 0, 255) / 255.
         img_lq = torch.clamp((img_lq * 255.0).round(), 0, 255) / 255.
 
         # normalize

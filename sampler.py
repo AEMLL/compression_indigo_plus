@@ -679,10 +679,20 @@ class CompressionSampler(BaseSampler):
         device = next(self.model.parameters()).device
         y0 = y0.to(device=device)
 
+        # Two scenarios:
+        # A) y0 is 128x128, right size of INN, must be upsampled by 4 for diffusion
+        # B) y0 is 512x512, right size for diffusion, must be downsampled by 4 for INN
+
+        # We want to avoid artificial downsampling, but having selection statements for
+        # each case should avoid any size mismatch issues
+
+        # upsample image to size required by diffusion model
         h_old, w_old = y0.shape[2:4]
         if not (h_old == self.configs.im_size and w_old == self.configs.im_size):
+            # Case A
             y0_resize = F.interpolate(y0, size=(self.configs.im_size,) * 2, mode='bicubic', antialias=True)
         else:
+            # Case B
             y0_resize = y0
         
         if self.configs_indigo.finetune_lr:
@@ -703,14 +713,16 @@ class CompressionSampler(BaseSampler):
                 t=torch.tensor([start_timesteps,]*im_hq.shape[0], device=device),
                 )
 
-        # Must downsample y0_resize by 4 to get valid INN input
-        y0_down4 = F.interpolate(y0, size=(yt.shape[3] // 4,) * 2, mode='bicubic', antialias=True)
+        # downsample input image to size required by INN
+        if (y0.shape[3] != (yt.shape[3] // 4)):
+            # Case B
+            y0 = F.interpolate(y0, size=(yt.shape[3] // 4,) * 2, mode='bicubic', antialias=True)
 
         assert yt.shape[-1] == self.configs.im_size and yt.shape[-2] == self.configs.im_size
         cond = torch.ones(128).to(device=device)
         sample = self.diffusion.ddim_sample_loop(
                 self.model,
-                y0=util_image.normalize_th(y0_down4, mean=0.5, std=0.5, reverse=False),
+                y0=util_image.normalize_th(y0, mean=0.5, std=0.5, reverse=False),
                 shape=yt.shape,
                 noise=yt,
                 start_timesteps=start_timesteps,
