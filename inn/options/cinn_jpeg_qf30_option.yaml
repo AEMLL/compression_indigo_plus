@@ -1,5 +1,5 @@
 # general settings
-name: inn_jpeg_qf30
+name: inn_jpeg_qf30_large
 model_type: CINNModel
 scale: 4
 num_gpu: 1  # set num_gpu: 0 for cpu mode
@@ -61,7 +61,7 @@ train:
 
   scheduler:
     type: MultiStepLR
-    milestones: [50000]
+    milestones: [2000 4000 6000 8000]
     gamma: 0.5
 
   total_iter: 10000
@@ -83,9 +83,9 @@ val:
       type: calculate_psnr
       crop_border: 4
       test_y_channel: false
-    niqe:
-      type: calculate_niqe
-      crop_border: 4
+    # niqe:
+    #   type: calculate_niqe
+    #   crop_border: 4
 
 # logging settings
 logger:

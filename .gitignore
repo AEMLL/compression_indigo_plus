@@ -6,3 +6,6 @@ scripts/
 **/.ipynb_checkpoints
 datasets/
 inn/experiments/
+testdata/
+**/tb_logger
+figures/

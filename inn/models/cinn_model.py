@@ -33,7 +33,11 @@ class CINNModel(SRModel):
             self.net_g_ema.eval()
 
         # define losses
-        self.l2_pix = build_loss(train_opt['l2_opt']).to(self.device)
+        if train_opt.get('perceptual_opt'):
+            self.perceptual_loss = build_loss(train_opt['perceptual_opt']).to(self.device)
+        else:
+            self.perceptual_loss = None
+        self.l2_loss = build_loss(train_opt['l2_opt']).to(self.device)
         
         # set up optimizers and schedulers
         self.setup_optimizers()
@@ -53,9 +57,14 @@ class CINNModel(SRModel):
         l_total = 0
         loss_dict = OrderedDict()
         # l2 loss
-        l_l2 = self.l2_pix(self.output, self.lq)
+        l_l2 = self.l2_loss(self.output, self.lq)
         l_total += l_l2
         loss_dict['l_l2'] = l_l2
+        # peceptual loss
+        if self.perceptual_loss:
+            l_perceptual,_ = self.perceptual_loss(self.output, self.lq)
+            l_total += l_perceptual
+            loss_dict['l_perceptual'] = l_perceptual
 
         l_total.backward()
         self.optimizer_g.step()

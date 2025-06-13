@@ -1,7 +1,8 @@
-scale: 2.5
-weight: [2.5,1]
-INN_dir: "weights/INN/large/INN_JPEG_QF10.pth"
-start_timesteps: 100
-
-finetune_lr: 0
+INN_dir: weights/INN/large/INN_JPEG_QF10.pth
 finetune_end_step: 0
+finetune_lr: 0
+scale: 2.5
+start_timesteps: 100
+weight:
+- 2.5
+- 1
